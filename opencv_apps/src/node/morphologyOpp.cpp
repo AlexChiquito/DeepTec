@@ -10,7 +10,7 @@ morphologyOpp::morphologyOpp():
 
 	//Subscripciones...
 	cam_sub_ = it_.subscribe("/zed/rgb/image_rect_color", 1, &morphologyOpp::cameraCB, this);
-
+	lines_sub_ = it_.subscribe("/hough_lines/image", 1, &morphologyOpp::linesCB, this);
 	//Publishers...
 	img_pub_ = it_.advertise("morphologyOpp/output", 1);
 	erosion_img_pub_ = it_.advertise("morphologyOpp/erosion", 1);
@@ -27,7 +27,7 @@ void morphologyOpp::Apply(const sensor_msgs::ImageConstPtr& msg, int selector){
 	cv::Mat input_img = cv_bridge::toCvShare(msg, sensor_msgs::image_encodings::BGR8) ->image;
 
 	cv::Size s = input_img.size();
-	cv::Rect ROI(0,s.height/2,s.width,s.height/2);
+	cv::Rect ROI(0,s.height/10,s.width,s.height*0.9);
 	cv::Mat cropped = input_img(ROI);
 	cv::Mat src_gray;
 	cv::cvtColor( cropped, src_gray, cv::COLOR_BGR2GRAY );
@@ -76,6 +76,31 @@ void morphologyOpp::Apply(const sensor_msgs::ImageConstPtr& msg, int selector){
 
 void morphologyOpp::cameraCB(const sensor_msgs::ImageConstPtr& msg){
 	Apply(msg, 1);
+}
+
+void morphologyOpp::linesCB(const sensor_msgs::ImageConstPtr& msg){
+	cv::Mat input_img = cv_bridge::toCvShare(msg, sensor_msgs::image_encodings::BGR8) ->image;
+	cv::Mat bgr[3];
+	int i, j;
+	cv::split(src, bgr);
+	cv::Mat blueIm = bgr[0];
+	cv::Size s = blueIm.size();
+	int blueHistogram[s.width];
+	for (i=0;i<=s.width;i++){
+		for (j=0;j<s.height;j++){
+			blueHistogram[i]+=(blueIm.at<char>(j,i)/255);
+		}
+	}
+	ROS_INFO_STREAM("Del primer for paso");
+	cv::Mat histImage(s,CV_8UC1,0);
+	for (i=1;i<s.width;i++){
+		cv::line(histImage, cv::Point(blueHistogram[i-1],i-1), cv::Point(blueHistogram[i],i), cv::Scalar(255),2,8,0);
+	}
+	ROS_INFO_STREAM("de aqui tambien paso");
+
+  	if(!histImage.empty()){
+        	cv::imshow("histo", histImage);
+    	}
 }
 
 cv::Mat morphologyOpp::Erosion(cv::Mat input_img, cv::Mat element){

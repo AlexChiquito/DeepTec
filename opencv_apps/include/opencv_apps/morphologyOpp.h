@@ -24,12 +24,14 @@ public:
 	image_transport::Publisher cerradura_img_pub_;
 	image_transport::Publisher apertura_img_pub_;
 	image_transport::Subscriber cam_sub_;
+	image_transport::Subscriber lines_sub_;
 
 	cv::Mat  Erosion(cv::Mat input_img, cv::Mat element);
 	cv::Mat  Dilation(cv::Mat input_img, cv::Mat element);
 	cv::Mat	 GaussBlur(cv::Mat input_img);
 	void Apply(const sensor_msgs::ImageConstPtr& msg, int selector);
 	void cameraCB(const sensor_msgs::ImageConstPtr& msg);
+	void linesCB(const sensor_msgs::ImageConstPtr& msg);
 	
 	cv::Mat src, erosion_out, dilation_out, cerradura_out, apertura_out;
 	
