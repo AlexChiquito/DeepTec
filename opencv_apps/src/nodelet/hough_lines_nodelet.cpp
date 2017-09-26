@@ -193,21 +193,23 @@ class HoughLinesNodelet : public opencv_apps::Nodelet
               double cos_t = cos(t), sin_t = sin(t);
               double x0 = r*cos_t, y0 = r*sin_t;
               double alpha = 1000;
-
-              cv::Point pt1( cvRound(x0 + alpha*(-sin_t)), cvRound(y0 + alpha*cos_t) );
-              cv::Point pt2( cvRound(x0 - alpha*(-sin_t)), cvRound(y0 - alpha*cos_t) );
+//	      ROS_INFO_STREAM("t = "<<t);
+	      if ((t < (3.14/4)) || (t > (3*3.14/4))){
+              	cv::Point pt1( cvRound(x0 + alpha*(-sin_t)), cvRound(y0 + alpha*cos_t) );
+              	cv::Point pt2( cvRound(x0 - alpha*(-sin_t)), cvRound(y0 - alpha*cos_t) );
 #ifndef CV_VERSION_EPOCH
-              cv::line( out_image, pt1, pt2, cv::Scalar(255,0,0), 3, cv::LINE_AA);
+              	cv::line( out_image, pt1, pt2, cv::Scalar(255,0,0), 3, cv::LINE_AA);
 #else
-              cv::line( out_image, pt1, pt2, cv::Scalar(255,0,0), 3, CV_AA);
+              	cv::line( out_image, pt1, pt2, cv::Scalar(255,0,0), 3, CV_AA);
 #endif
-              opencv_apps::Line line_msg;
-              line_msg.pt1.x = pt1.x;
-              line_msg.pt1.y = pt1.y;
-              line_msg.pt2.x = pt2.x;
-              line_msg.pt2.y = pt2.y;
-              lines_msg.lines.push_back(line_msg);
-            }
+              	opencv_apps::Line line_msg;
+              	line_msg.pt1.x = pt1.x;
+              	line_msg.pt1.y = pt1.y;
+              	line_msg.pt2.x = pt2.x;
+              	line_msg.pt2.y = pt2.y;
+              	lines_msg.lines.push_back(line_msg);
+              }    
+	    }
 
             break;
           }
