@@ -19,6 +19,10 @@ class lineController{
 	ros::Subscriber lines_sub_;
 	ros::Publisher action_pub_;
 
+	float m;
+	float x_reference;
+	float m_reference;
+	
 	float computeCross(float x1, float x2, float y1, float y2);
 	void actionCompute(float x);
 	void linesCB(const deepTec_control::LineArrayStamped msg);
