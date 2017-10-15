@@ -194,13 +194,16 @@ class HoughLinesNodelet : public opencv_apps::Nodelet
               double x0 = r*cos_t, y0 = r*sin_t;
               double alpha = 1000;
 //	      ROS_INFO_STREAM("t = "<<t);
-	      if ((t < (3.14/4)) || (t > (3*3.14/4))){
-              	cv::Point pt1( cvRound(x0 + alpha*(-sin_t)), cvRound(y0 + alpha*cos_t) );
+//	      ROS_INFO_STREAM("r = "<<r);
+	      int j=0;
+	      if (((t < (3.14/4)) || (t > (3*3.14/4))) && (r<0)){
+		j++;
+		cv::Point pt1( cvRound(x0 + alpha*(-sin_t)), cvRound(y0 + alpha*cos_t) );
               	cv::Point pt2( cvRound(x0 - alpha*(-sin_t)), cvRound(y0 - alpha*cos_t) );
 #ifndef CV_VERSION_EPOCH
-              	cv::line( out_image, pt1, pt2, cv::Scalar(255,0,0), 3, cv::LINE_AA);
+              	cv::line( out_image, pt1, pt2, cv::Scalar((j==0)?255:0,(j==1)?255:0,(j==2)?255:0), 3, cv::LINE_AA);
 #else
-              	cv::line( out_image, pt1, pt2, cv::Scalar(255,0,0), 3, CV_AA);
+              	cv::line( out_image, pt1, pt2, cv::Scalar((j==0)?255:0,(j==1)?255:0,(j==2)?255:0), 3, CV_AA);
 #endif
               	opencv_apps::Line line_msg;
               	line_msg.pt1.x = pt1.x;
