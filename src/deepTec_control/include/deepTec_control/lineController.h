@@ -7,6 +7,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <std_msgs/String.h>
+#include <std_msgs/Int32.h>
 #include <opencv2/core/core.hpp>
 
 class lineController{
@@ -25,7 +26,9 @@ class lineController{
 	float x_reference;
 	float m_reference;
 	bool obstacle; 
-	
+
+
+	float x1, x2, y1, y2;	
 	float computeCross(float x1, float x2, float y1, float y2);
 	void actionCompute(float x);
 	void scanCB(const sensor_msgs::LaserScan msg);

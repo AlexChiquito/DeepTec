@@ -41,36 +41,36 @@ void morphologyOpp::Apply(const sensor_msgs::ImageConstPtr& msg, int selector){
 							cv::Point (dilsize, dilsize) );
 	//dilatacion TODO:switch de selector
 	//TODO: probar con diferentes formas de elementos estructurantes
-	dilation_out = Dilation(src_gray, element_dil);
+//	dilation_out = Dilation(src_gray, element_dil);
 
 	//erotion TODO:switch de selector
 	//TODO: probar con diferentes formas de elementos estructurantes
-	erosion_out = Erosion(src_gray, element_ero);	
+//	erosion_out = Erosion(src_gray, element_ero);	
 
 	//TODO:Apertura y cerradura
 	//Apertura: Primero erosion y luego dilatacion
-	apertura_out = Dilation(Erosion(src_gray, element_ero), element_dil);
+//	apertura_out = Dilation(Erosion(src_gray, element_ero), element_dil);
 
 	//Cerradura: Primero dilatacion y luego erosion
 	cerradura_out = Erosion(Dilation(src_gray, element_dil), element_ero);	
 	//aplicar suavizado Gaussiano
 
-	dilation_out = GaussBlur(dilation_out);
-	erosion_out = GaussBlur(erosion_out);
-	apertura_out = GaussBlur(apertura_out);
+//	dilation_out = GaussBlur(dilation_out);
+//	erosion_out = GaussBlur(erosion_out);
+//	apertura_out = GaussBlur(apertura_out);
 	cerradura_out = GaussBlur(cerradura_out);
 
 	//Convertir a mensaje de cv a mensaje de ros
-	sensor_msgs::ImagePtr msg_dil = cv_bridge::CvImage(std_msgs::Header(), "mono8", dilation_out).toImageMsg();
-	sensor_msgs::ImagePtr msg_ero = cv_bridge::CvImage(std_msgs::Header(), "mono8", erosion_out).toImageMsg();
-	sensor_msgs::ImagePtr msg_ape = cv_bridge::CvImage(std_msgs::Header(), "mono8", apertura_out).toImageMsg();
+//	sensor_msgs::ImagePtr msg_dil = cv_bridge::CvImage(std_msgs::Header(), "mono8", dilation_out).toImageMsg();
+////	sensor_msgs::ImagePtr msg_ero = cv_bridge::CvImage(std_msgs::Header(), "mono8", erosion_out).toImageMsg();
+//	sensor_msgs::ImagePtr msg_ape = cv_bridge::CvImage(std_msgs::Header(), "mono8", apertura_out).toImageMsg();
 	sensor_msgs::ImagePtr msg_cer = cv_bridge::CvImage(std_msgs::Header(), "mono8", cerradura_out).toImageMsg();
 
 	//Publish outputs
-	erosion_img_pub_.publish(msg_ero);
-	dilation_img_pub_.publish(msg_dil);
+//	erosion_img_pub_.publish(msg_ero);
+//	dilation_img_pub_.publish(msg_dil);
 	cerradura_img_pub_.publish(msg_cer);
-	apertura_img_pub_.publish(msg_ape);
+//	apertura_img_pub_.publish(msg_ape);
 		
 }
 
